@@ -1,2 +1,20 @@
-# de_etl_house_pricing
-ETL to extract data from a Kaggle dataset, transform it on a parquet file and load on S3/Snowflake DW.
+# data-etl-quote-history
+
+* Requires Python 3.6+
+
+
+## To test locally, Run:
+
+```
+make start
+```
+
+# Make a request to the container
+```
+curl -X POST http://localhost:9000/2015-03-31/functions/function/invocations -H 'Content-Type: application/json' -d '"{}"'
+```
+
+## To run all tests, execute:
+```
+pytest tests/
+```

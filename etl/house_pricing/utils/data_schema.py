@@ -1,0 +1,23 @@
+house_prices_dtypes = {
+    "id": "Int64",
+    "date": "datetime64[ns]",
+    "price": "Float64",
+    "bedrooms": "Int64",
+    "bathrooms": "Float64",
+    "sqft_living": "Int64",
+    "sqft_lot": "Int64",
+    "floors": "Float64",
+    "waterfront": "Int64",
+    "view": "Int64",
+    "condition": "Int64",
+    "grade": "Int64",
+    "sqft_above": "Int64",
+    "sqft_basement": "Int64",
+    "yr_built": "Int64",
+    "yr_renovated": "Int64",
+    "zipcode": "Int64",
+    "lat": "Float64",
+    "long": "Float64",
+    "sqft_living15": "Int64",
+    "sqft_lot15": "Int64"
+}
