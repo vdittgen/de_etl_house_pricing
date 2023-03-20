@@ -3,7 +3,8 @@ import datetime
 from loguru import logger
 from pandas import DataFrame
 
-from etl.house_pricing.adapters.file_extract_adapter import FileExtractRepository
+from etl.house_pricing.adapters.file_extract_adapter import \
+    FileExtractRepository
 from etl.house_pricing.adapters.s3_store_adapter import StoreRepository
 from etl.house_pricing.dependencies import get_dependencies
 from etl.house_pricing.services.tranformer import Transformer
@@ -33,11 +34,26 @@ class HousePricingETL:
     def extract(self) -> DataFrame:
         return self.extract_adapter.extract()
 
-    def transform(self, pandas_df: DataFrame, datatypes_mapping=None, converters=None):
+    def transform(
+                self,
+                pandas_df: DataFrame,
+                datatypes_mapping=None,
+                converters=None
+            ):
         pandas_df = pandas_df.fillna("")
-        transformed_df = self.transformer.transform(
-            pandas_df, datatypes_mapping, converters
-        )
+        try:
+            transformed_df = self.transformer.transform(
+                pandas_df, datatypes_mapping, converters
+            )
+        except Exception as e:
+            raise Exception("Error transforming data, check input data") from e
+
+        if transformed_df is None:
+            raise Exception("Error transforming data, check input data")
+
+        if transformed_df.empty:
+            raise Exception("Error transforming data, check input data")
+
         return transformed_df.to_parquet()
 
     def load(self, final_data) -> None:
@@ -56,5 +72,10 @@ if __name__ == "__main__":
     extract_adapter = get_dependencies().get_house_prices_store()
     transformer = get_dependencies().get_transformer()
     load_store_adapter = get_dependencies().get_s3_store()
-    etl = HousePricingETL(log, extract_adapter, transformer, load_store_adapter)
+    etl = HousePricingETL(
+            log,
+            extract_adapter,
+            transformer,
+            load_store_adapter
+        )
     etl.execute()
