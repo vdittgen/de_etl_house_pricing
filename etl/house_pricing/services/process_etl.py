@@ -24,12 +24,16 @@ class HousePricingETL:
         self.load_store_adapter = load_store_adapter
 
     def execute(self) -> None:
-        dataframe = self.extract()
-        if dataframe.empty:
-            self.log.info("Extract got an empty response.")
-            return
-        transformed_data = self.transform(dataframe)
-        self.load(transformed_data)
+        try:
+            dataframe = self.extract()
+            if dataframe.empty:
+                self.log.info("Extract got an empty response.")
+                return
+            transformed_data = self.transform(dataframe)
+            self.load(transformed_data)
+        except Exception as e:
+            self.log.exception(f"An error occurred while \
+                               running the pipeline: {e}")
 
     def extract(self) -> DataFrame:
         return self.extract_adapter.extract()
